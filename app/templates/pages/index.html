@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}{{ app_name }} — Cybersecurity Training Platform{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero py-5">
+    <div class="container py-5">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-7">
+                <span class="badge text-bg-primary bg-opacity-75 mb-3">
+                    <i class="bi bi-stars me-1"></i>Blue-team training environment
+                </span>
+                <h1 class="display-4 fw-bold lh-sm">
+                    Train. Detect. Respond.<br>
+                    <span class="text-primary">Master cyber defense.</span>
+                </h1>
+                <p class="lead text-body-secondary mt-3 mb-4 col-lg-10 px-0">
+                    CyberArena is a hands-on platform for practicing security operations —
+                    simulate attacks, detect threats, and respond to incidents in a safe,
+                    controlled arena.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#features" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Explore Features
+                    </a>
+                    <a href="#about" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-book me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <div class="hero-emblem d-inline-flex align-items-center justify-content-center">
+                    <i class="bi bi-shield-lock display-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-5 border-top border-secondary-subtle">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">One arena, every discipline</h2>
+            <p class="text-body-secondary col-lg-6 mx-auto">
+                Purpose-built modules covering the full defensive lifecycle — from
+                simulation to reporting.
+            </p>
+        </div>
+        <div class="row g-4">
+            {% set features = [
+                ("bi-crosshair", "Attack Simulator", "Launch controlled attack scenarios to generate realistic security telemetry."),
+                ("bi-radar", "Threat Detection", "Write and tune detection rules against simulated activity."),
+                ("bi-exclamation-octagon", "Incident Response", "Triage, investigate, and resolve incidents end to end."),
+                ("bi-binoculars", "Threat Hunting", "Proactively hunt for indicators across generated event data."),
+                ("bi-speedometer2", "Live Dashboard", "Monitor your security posture at a glance in real time."),
+                ("bi-file-earmark-bar-graph", "Reports", "Summarize findings and progress with exportable reports."),
+            ] %}
+            {% for icon, title, text in features %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 feature-card border-secondary-subtle">
+                    <div class="card-body p-4">
+                        <div class="feature-icon d-inline-flex align-items-center justify-content-center rounded-3 mb-3">
+                            <i class="bi {{ icon }} fs-3 text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-semibold">{{ title }}</h5>
+                        <p class="card-text text-body-secondary">{{ text }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About -->
+<section id="about" class="py-5 border-top border-secondary-subtle">
+    <div class="container py-4">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Built for defenders</h2>
+                <p class="text-body-secondary">
+                    CyberArena provides a safe sandbox where security teams and students
+                    can sharpen practical skills without touching production systems.
+                    Everything happens inside the arena — no real infrastructure at risk.
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i>
+                        <span>Realistic, repeatable training scenarios</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i>
+                        <span>Safe by design — fully simulated, isolated data</span>
+                    </li>
+                    <li class="d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i>
+                        <span>Covers the complete detect-and-respond workflow</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3 text-center">
+                    <div class="col-6">
+                        <div class="stat-card rounded-3 p-4 border border-secondary-subtle">
+                            <div class="fs-2 fw-bold text-primary">6</div>
+                            <div class="text-body-secondary small">Training modules</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card rounded-3 p-4 border border-secondary-subtle">
+                            <div class="fs-2 fw-bold text-primary">100%</div>
+                            <div class="text-body-secondary small">Simulated &amp; safe</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card rounded-3 p-4 border border-secondary-subtle">
+                            <div class="fs-2 fw-bold text-primary">24/7</div>
+                            <div class="text-body-secondary small">Always available</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card rounded-3 p-4 border border-secondary-subtle">
+                            <div class="fs-2 fw-bold text-primary">0</div>
+                            <div class="text-body-secondary small">Production risk</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

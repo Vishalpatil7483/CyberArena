@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container py-5 text-center">
+        <i class="bi bi-compass display-1 text-primary"></i>
+        <h1 class="display-5 fw-bold mt-4">404 — Page not found</h1>
+        <p class="text-body-secondary col-md-6 mx-auto">
+            The page you are looking for doesn't exist or has been moved.
+        </p>
+        <a href="/" class="btn btn-primary mt-3">
+            <i class="bi bi-house me-2"></i>Back to Home
+        </a>
+    </div>
+</section>
+{% endblock %}

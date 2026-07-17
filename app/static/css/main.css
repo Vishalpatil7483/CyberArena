@@ -1,0 +1,47 @@
+/* CyberArena base styles */
+
+:root {
+    --ca-glow: rgba(13, 110, 253, 0.15);
+}
+
+.hero {
+    background:
+        radial-gradient(ellipse 80% 60% at 70% 20%, var(--ca-glow), transparent),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(13, 202, 240, 0.08), transparent);
+}
+
+.hero-emblem {
+    width: 16rem;
+    height: 16rem;
+    border-radius: 50%;
+    border: 1px solid var(--bs-border-color);
+    background: radial-gradient(circle at 50% 40%, var(--ca-glow), transparent 70%);
+    box-shadow: 0 0 80px var(--ca-glow);
+}
+
+.feature-card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--bs-primary) !important;
+}
+
+.feature-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--ca-glow);
+}
+
+.stat-card {
+    background: var(--bs-body-bg);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section[id] {
+    scroll-margin-top: 4.5rem;
+}

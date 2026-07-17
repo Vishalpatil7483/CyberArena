@@ -1,0 +1,51 @@
+[33m091eedb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m chore: remove virtual environment from repository
+ .../site-packages/pip-24.2.dist-info/AUTHORS.txt   |  796 [31m--[m
+ .../Lib/site-packages/pip-24.2.dist-info/INSTALLER |    1 [31m-[m
+ .../site-packages/pip-24.2.dist-info/LICENSE.txt   |   20 [31m-[m
+ .../Lib/site-packages/pip-24.2.dist-info/METADATA  |   89 [31m-[m
+ .venv/Lib/site-packages/pip-24.2.dist-info/RECORD  |  853 [31m--[m
+ .../Lib/site-packages/pip-24.2.dist-info/REQUESTED |    0
+ .venv/Lib/site-packages/pip-24.2.dist-info/WHEEL   |    5 [31m-[m
+ .../pip-24.2.dist-info/entry_points.txt            |    3 [31m-[m
+ .../site-packages/pip-24.2.dist-info/top_level.txt |    1 [31m-[m
+ .venv/Lib/site-packages/pip/__init__.py            |   13 [31m-[m
+ .venv/Lib/site-packages/pip/__main__.py            |   24 [31m-[m
+ .venv/Lib/site-packages/pip/__pip-runner__.py      |   50 [31m-[m
+ .../pip/__pycache__/__init__.cpython-312.pyc       |  Bin [31m668[m -> [32m0[m bytes
+ .../pip/__pycache__/__main__.cpython-312.pyc       |  Bin [31m824[m -> [32m0[m bytes
+ .../pip/__pycache__/__pip-runner__.cpython-312.pyc |  Bin [31m2187[m -> [32m0[m bytes
+ .venv/Lib/site-packages/pip/_internal/__init__.py  |   18 [31m-[m
+ .../_internal/__pycache__/__init__.cpython-312.pyc |  Bin [31m770[m -> [32m0[m bytes
+ .../__pycache__/build_env.cpython-312.pyc          |  Bin [31m14460[m -> [32m0[m bytes
+ .../_internal/__pycache__/cache.cpython-312.pyc    |  Bin [31m12644[m -> [32m0[m bytes
+ .../__pycache__/configuration.cpython-312.pyc      |  Bin [31m17612[m -> [32m0[m bytes
+ .../__pycache__/exceptions.cpython-312.pyc         |  Bin [31m35540[m -> [32m0[m bytes
+ .../pip/_internal/__pycache__/main.cpython-312.pyc |  Bin [31m653[m -> [32m0[m bytes
+ .../__pycache__/pyproject.cpython-312.pyc          |  Bin [31m5107[m -> [32m0[m bytes
+ .../self_outdated_check.cpython-312.pyc            |  Bin [31m10205[m -> [32m0[m bytes
+ .../__pycache__/wheel_builder.cpython-312.pyc      |  Bin [31m13616[m -> [32m0[m bytes
+ .venv/Lib/site-packages/pip/_internal/build_env.py |  315 [31m-[m
+ .venv/Lib/site-packages/pip/_internal/cache.py     |  290 [31m-[m
+ .../site-packages/pip/_internal/cli/__init__.py    |    4 [31m-[m
+ .../cli/__pycache__/__init__.cpython-312.pyc       |  Bin [31m261[m -> [32m0[m bytes
+ .../cli/__pycache__/autocompletion.cpython-312.pyc |  Bin [31m8568[m -> [32m0[m bytes
+ .../cli/__pycache__/base_command.cpython-312.pyc   |  Bin [31m10188[m -> [32m0[m bytes
+ .../cli/__pycache__/cmdoptions.cpython-312.pyc     |  Bin [31m30376[m -> [32m0[m bytes
+ .../__pycache__/command_context.cpython-312.pyc    |  Bin [31m1764[m -> [32m0[m bytes
+ .../cli/__pycache__/index_command.cpython-312.pyc  |  Bin [31m7118[m -> [32m0[m bytes
+ .../_internal/cli/__pycache__/main.cpython-312.pyc |  Bin [31m2283[m -> [32m0[m bytes
+ .../cli/__pycache__/main_parser.cpython-312.pyc    |  Bin [31m4883[m -> [32m0[m bytes
+ .../cli/__pycache__/parser.cpython-312.pyc         |  Bin [31m15006[m -> [32m0[m bytes
+ .../cli/__pycache__/progress_bars.cpython-312.pyc  |  Bin [31m3828[m -> [32m0[m bytes
+ .../cli/__pycache__/req_command.cpython-312.pyc    |  Bin [31m12223[m -> [32m0[m bytes
+ .../cli/__pycache__/spinners.cpython-312.pyc       |  Bin [31m7823[m -> [32m0[m bytes
+ .../cli/__pycache__/status_codes.cpython-312.pyc   |  Bin [31m358[m -> [32m0[m bytes
+ .../pip/_internal/cli/autocompletion.py            |  176 [31m-[m
+ .../pip/_internal/cli/base_command.py              |  231 [31m-[m
+ .../site-packages/pip/_internal/cli/cmdoptions.py  | 1075 [31m---[m
+ .../pip/_internal/cli/command_context.py           |   27 [31m-[m
+ .../pip/_internal/cli/index_command.py             |  170 [31m-[m
+ .venv/Lib/site-packages/pip/_internal/cli/main.py  |   80 [31m-[m
+ .../site-packages/pip/_internal/cli/main_parser.py |  134 [31m-[m
+ .../Lib/site-packages/pip/_internal/cli/parser.py  |  294 [31m-[m
+ .../pip/_i
