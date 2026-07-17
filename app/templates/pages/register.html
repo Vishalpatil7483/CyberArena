@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import "partials/forms.html" as forms %}
+
+{% block title %}Register — {{ app_name }}{% endblock %}
+
+{% block content %}
+{% call forms.auth_card("Create your account", "bi-person-plus") %}
+    {{ forms.error_list(errors) }}
+    <form method="post" action="/register" novalidate>
+        {{ forms.csrf_field(csrf_token) }}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username"
+                   value="{{ form.username or '' }}" required minlength="3" maxlength="50"
+                   autocomplete="username" autofocus>
+            <div class="form-text">3-50 characters: letters, numbers, underscores.</div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email"
+                   value="{{ form.email or '' }}" required autocomplete="email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   required minlength="8" autocomplete="new-password">
+            <div class="form-text">At least 8 characters.</div>
+        </div>
+        <div class="mb-4">
+            <label for="password_confirm" class="form-label">Confirm password</label>
+            <input type="password" class="form-control" id="password_confirm"
+                   name="password_confirm" required autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-person-plus me-2"></i>Create account
+        </button>
+    </form>
+    <p class="text-center text-body-secondary mt-4 mb-0">
+        Already have an account? <a href="/login">Sign in</a>
+    </p>
+{% endcall %}
+{% endblock %}

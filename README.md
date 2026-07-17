@@ -5,9 +5,9 @@ security teams and students practice the full defensive lifecycle — attack
 simulation, threat detection, incident response, threat hunting, and
 reporting — in a safe, fully simulated environment.
 
-> **Status:** Milestone 1 — project foundation. Domain modules (auth,
-> simulator, detection, incidents, hunting, reports, dashboard) are
-> scaffolded but not yet implemented.
+> **Status:** Milestone 2 — authentication. Users can register, sign in,
+> and access a protected dashboard. Domain modules (simulator, detection,
+> incidents, hunting, reports) are scaffolded but not yet implemented.
 
 ## Tech Stack
 
@@ -94,10 +94,54 @@ In production (`ENVIRONMENT=production`):
 
 ## Database Migrations
 
+Apply pending migrations (required before first run and after pulling
+schema changes):
+
+```bash
+alembic upgrade head
+```
+
+Create a new migration after changing models:
+
 ```bash
 alembic revision --autogenerate -m "describe change"
 alembic upgrade head
 ```
+
+## Authentication
+
+CyberArena uses session-based authentication with signed, HTTPOnly,
+SameSite=Lax cookies (Secure flag in production). Passwords are hashed with
+bcrypt via passlib; all state-changing forms carry CSRF tokens.
+
+Session behavior is configured via environment variables (see
+`.env.example`): `SECRET_KEY` signs the session cookie,
+`SESSION_COOKIE_NAME` and `SESSION_MAX_AGE` control the cookie itself.
+
+### Creating the first user
+
+Run the app and register through the UI at http://localhost:8000/register —
+new accounts get the `student` role. To create a user from the command line
+instead:
+
+```bash
+python -c "
+from app.core.database import SessionLocal
+from app.auth.services import register_user
+with SessionLocal() as db:
+    user = register_user(db, 'admin', 'admin@example.com', 'a-strong-password')
+    print('created', user.username, user.id)
+"
+```
+
+### Routes
+
+| Route        | Method    | Access        | Purpose                          |
+| ------------ | --------- | ------------- | -------------------------------- |
+| `/register`  | GET/POST  | anonymous     | Create an account                |
+| `/login`     | GET/POST  | anonymous     | Sign in (username or email)      |
+| `/logout`    | POST      | authenticated | Destroy the session              |
+| `/dashboard` | GET       | authenticated | Account overview                 |
 
 ## Testing
 

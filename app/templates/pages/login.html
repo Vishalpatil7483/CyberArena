@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "partials/forms.html" as forms %}
+
+{% block title %}Sign In — {{ app_name }}{% endblock %}
+
+{% block content %}
+{% call forms.auth_card("Sign in", "bi-shield-lock") %}
+    {% if message %}
+    <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endif %}
+    {{ forms.error_list(errors) }}
+    <form method="post" novalidate>
+        {{ forms.csrf_field(csrf_token) }}
+        <div class="mb-3">
+            <label for="identifier" class="form-label">Username or email</label>
+            <input type="text" class="form-control" id="identifier" name="identifier"
+                   value="{{ form.identifier or '' }}" required
+                   autocomplete="username" autofocus>
+        </div>
+        <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign in
+        </button>
+    </form>
+    <p class="text-center text-body-secondary mt-4 mb-0">
+        No account yet? <a href="/register">Create one</a>
+    </p>
+{% endcall %}
+{% endblock %}

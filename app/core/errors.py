@@ -9,7 +9,7 @@ import logging
 
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.templates import templates
@@ -51,6 +51,11 @@ def _wants_html(request: Request) -> bool:
 
 def _error_response(request: Request, status_code: int, detail: str) -> Response:
     if _wants_html(request):
+        if status_code == status.HTTP_401_UNAUTHORIZED:
+            return RedirectResponse(
+                url=f"/login?next={request.url.path}",
+                status_code=status.HTTP_303_SEE_OTHER,
+            )
         template = "errors/404.html" if status_code == 404 else "errors/error.html"
         return templates.TemplateResponse(
             request,

@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./cyberarena.db"
     database_echo: bool = False
 
+    # Sessions
+    session_cookie_name: str = "cyberarena_session"
+    session_max_age: int = 60 * 60 * 8  # 8 hours
+
     # Logging
     log_level: str = "INFO"
     log_file: str = "logs/cyberarena.log"

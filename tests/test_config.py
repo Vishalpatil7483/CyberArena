@@ -40,7 +40,8 @@ def test_production_accepts_strong_secret_key() -> None:
     assert settings.is_production
 
 
-def test_testing_uses_in_memory_db() -> None:
+def test_testing_uses_in_memory_db(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("DATABASE_URL", raising=False)
     settings = EnvTestingSettings(_env_file=None)
     assert settings.database_url == "sqlite:///:memory:"
 

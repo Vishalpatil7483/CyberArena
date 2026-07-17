@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-2">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">
+                    <a class="nav-link{% if request.url.path == '/' %} active{% endif %}" href="/">
                         <i class="bi bi-house me-1"></i>Home
                     </a>
                 </li>
@@ -21,11 +21,32 @@
                         <i class="bi bi-grid me-1"></i>Features
                     </a>
                 </li>
+                {% if is_authenticated(request) %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/#about">
-                        <i class="bi bi-info-circle me-1"></i>About
+                    <a class="nav-link{% if request.url.path == '/dashboard' %} active{% endif %}" href="/dashboard">
+                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
                     </a>
                 </li>
+                <li class="nav-item ms-lg-2">
+                    <form method="post" action="/logout" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token_for(request) }}">
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right me-1"></i>Sign out
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link{% if request.url.path == '/login' %} active{% endif %}" href="/login">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Sign in
+                    </a>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-primary btn-sm" href="/register">
+                        <i class="bi bi-person-plus me-1"></i>Register
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

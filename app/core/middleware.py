@@ -1,36 +1,50 @@
 """Custom middleware."""
 
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from starlette.requests import Request
-from starlette.responses import Response
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.core.config import get_settings
 
 
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    """Attach basic security headers to every response."""
+class SecurityHeadersMiddleware:
+    """Attach basic security headers to every response.
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
-        response = await call_next(request)
+    Implemented as pure ASGI middleware (no BaseHTTPMiddleware overhead).
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
         settings = get_settings()
-
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Permissions-Policy"] = (
-            "camera=(), microphone=(), geolocation=()"
-        )
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            "style-src 'self' https://cdn.jsdelivr.net; "
-            "script-src 'self' https://cdn.jsdelivr.net; "
-            "font-src 'self' https://cdn.jsdelivr.net; "
-            "img-src 'self' data:"
-        )
+        headers = {
+            b"x-content-type-options": b"nosniff",
+            b"x-frame-options": b"DENY",
+            b"referrer-policy": b"strict-origin-when-cross-origin",
+            b"permissions-policy": b"camera=(), microphone=(), geolocation=()",
+            b"content-security-policy": (
+                b"default-src 'self'; "
+                b"style-src 'self' https://cdn.jsdelivr.net; "
+                b"script-src 'self' https://cdn.jsdelivr.net; "
+                b"font-src 'self' https://cdn.jsdelivr.net; "
+                b"img-src 'self' data:; "
+                b"form-action 'self'; "
+                b"base-uri 'self'; "
+                b"frame-ancestors 'none'"
+            ),
+        }
         if settings.is_production:
-            response.headers["Strict-Transport-Security"] = (
-                "max-age=31536000; includeSubDomains"
+            headers[b"strict-transport-security"] = (
+                b"max-age=31536000; includeSubDomains"
             )
-        return response
+        self._headers = list(headers.items())
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        async def send_with_headers(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                message.setdefault("headers", [])
+                message["headers"].extend(self._headers)
+            await send(message)
+
+        await self.app(scope, receive, send_with_headers)
