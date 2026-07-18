@@ -5,9 +5,11 @@ security teams and students practice the full defensive lifecycle — attack
 simulation, threat detection, incident response, threat hunting, and
 reporting — in a safe, fully simulated environment.
 
-> **Status:** Milestone 2 — authentication. Users can register, sign in,
-> and access a protected dashboard. Domain modules (simulator, detection,
-> incidents, hunting, reports) are scaffolded but not yet implemented.
+> **Status:** Milestone 3 — labs & challenges foundation. Users can browse
+> a catalog of cybersecurity labs, start them, track completion, and see
+> progress statistics on the dashboard. Remaining domain modules
+> (simulator, detection, incidents, hunting, reports) are scaffolded but
+> not yet implemented.
 
 ## Tech Stack
 
@@ -141,7 +143,38 @@ with SessionLocal() as db:
 | `/register`  | GET/POST  | anonymous     | Create an account                |
 | `/login`     | GET/POST  | anonymous     | Sign in (username or email)      |
 | `/logout`    | POST      | authenticated | Destroy the session              |
-| `/dashboard` | GET       | authenticated | Account overview                 |
+| `/dashboard` | GET       | authenticated | Account overview + lab stats     |
+
+## Labs & Challenges
+
+The labs catalog covers six categories — Web Security, Network Security,
+Cryptography, Linux, Digital Forensics, and Reverse Engineering — across
+Easy/Medium/Hard difficulties. Each lab has an estimated duration and a
+point value. Anyone can browse the catalog and lab details; starting and
+completing labs requires an account. Per-user progress
+(`not_started` → `in_progress` → `completed`) is tracked with one record
+per user/lab, and the dashboard shows totals, completed and in-progress
+counts, and a completion percentage.
+
+### Seeding sample labs
+
+After running migrations, load the 14 bundled sample labs:
+
+```bash
+python -m app.services.seed
+```
+
+The seeder matches labs by slug, so it is safe to run repeatedly — existing
+labs are never duplicated or overwritten.
+
+### Lab routes
+
+| Route                    | Method | Access        | Purpose                       |
+| ------------------------ | ------ | ------------- | ----------------------------- |
+| `/labs`                  | GET    | anonymous     | Browse the lab catalog        |
+| `/labs/{slug}`           | GET    | anonymous     | Lab details + progress state  |
+| `/labs/{slug}/start`     | POST   | authenticated | Start a lab                   |
+| `/labs/{slug}/complete`  | POST   | authenticated | Mark a lab completed          |
 
 ## Testing
 

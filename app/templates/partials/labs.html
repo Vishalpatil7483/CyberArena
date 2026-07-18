@@ -1,0 +1,24 @@
+{# Reusable pieces for lab pages. #}
+
+{% macro difficulty_badge(difficulty) %}
+{% set colors = {"Easy": "success", "Medium": "warning", "Hard": "danger"} %}
+<span class="badge text-bg-{{ colors[difficulty.value] }}">{{ difficulty.value }}</span>
+{% endmacro %}
+
+{% macro progress_badge(progress) %}
+{% if progress and progress.status.value == "completed" %}
+<span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span>
+{% elif progress and progress.status.value == "in_progress" %}
+<span class="badge text-bg-info"><i class="bi bi-play-circle me-1"></i>In progress</span>
+{% else %}
+<span class="badge text-bg-secondary"><i class="bi bi-circle me-1"></i>Not started</span>
+{% endif %}
+{% endmacro %}
+
+{% macro lab_meta(lab) %}
+<div class="d-flex flex-wrap gap-3 text-body-secondary small">
+    <span><i class="bi bi-folder2 me-1"></i>{{ lab.category }}</span>
+    <span><i class="bi bi-clock me-1"></i>{{ lab.estimated_time_minutes }} min</span>
+    <span><i class="bi bi-trophy me-1"></i>{{ lab.points }} pts</span>
+</div>
+{% endmacro %}

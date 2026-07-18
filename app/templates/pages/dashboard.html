@@ -17,6 +17,26 @@
             </span>
         </div>
 
+        <div class="row g-4 mb-4">
+            {% set stat_cards = [
+                ("bi-collection", "Total labs", stats.total_labs),
+                ("bi-check-circle", "Completed", stats.completed),
+                ("bi-play-circle", "In progress", stats.in_progress),
+                ("bi-graph-up-arrow", "Completion", stats.completion_percent ~ "%"),
+            ] %}
+            {% for icon, label, value in stat_cards %}
+            <div class="col-6 col-lg-3">
+                <div class="card border-secondary-subtle h-100">
+                    <div class="card-body p-4 text-center">
+                        <i class="bi {{ icon }} text-primary fs-3"></i>
+                        <div class="fs-3 fw-bold mt-1">{{ value }}</div>
+                        <div class="text-body-secondary small">{{ label }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
         <div class="row g-4">
             <div class="col-lg-5">
                 <div class="card border-secondary-subtle h-100">
@@ -44,13 +64,18 @@
                             <i class="bi bi-rocket-takeoff text-primary me-2"></i>Get started
                         </h2>
                         <p class="text-body-secondary">
-                            Training modules — attack simulation, threat detection,
-                            incident response, hunting, and reports — are coming in
-                            upcoming milestones. Your account is ready for them.
+                            {% if stats.total_labs == 0 %}
+                            Labs are being prepared. Check back soon to begin training.
+                            {% elif stats.completed == stats.total_labs %}
+                            You've completed every available lab — impressive work!
+                            {% else %}
+                            Browse the lab catalog and continue building your
+                            defensive skills across six disciplines.
+                            {% endif %}
                         </p>
                         <div class="mt-auto">
-                            <a href="/#features" class="btn btn-outline-light">
-                                <i class="bi bi-grid me-2"></i>Preview modules
+                            <a href="/labs" class="btn btn-primary">
+                                <i class="bi bi-flask me-2"></i>Browse Labs
                             </a>
                         </div>
                     </div>

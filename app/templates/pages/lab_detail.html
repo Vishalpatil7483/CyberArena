@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% import "partials/labs.html" as lab_ui %}
+{% import "partials/forms.html" as forms %}
+
+{% block title %}{{ lab.title }} — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container py-4">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/labs">Labs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ lab.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary-subtle">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            {{ lab_ui.difficulty_badge(lab.difficulty) }}
+                            {% if is_authenticated(request) %}
+                            {{ lab_ui.progress_badge(progress) }}
+                            {% endif %}
+                        </div>
+                        <h1 class="h2 fw-bold">{{ lab.title }}</h1>
+                        {{ lab_ui.lab_meta(lab) }}
+                        <hr class="border-secondary-subtle my-4">
+                        <p class="text-body-secondary mb-0">{{ lab.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary-subtle">
+                    <div class="card-body p-4">
+                        <h2 class="h6 fw-semibold text-body-secondary text-uppercase mb-3">
+                            Your progress
+                        </h2>
+                        {% if not is_authenticated(request) %}
+                        <p class="text-body-secondary small">
+                            Sign in to start this lab and track your progress.
+                        </p>
+                        <a href="/login?next=/labs/{{ lab.slug }}" class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign in
+                        </a>
+                        {% elif progress and progress.status.value == "completed" %}
+                        <div class="text-center py-2">
+                            <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                            <p class="fw-semibold mt-2 mb-1">Completed</p>
+                            <p class="text-body-secondary small mb-0">
+                                {{ progress.completed_at.strftime("%B %d, %Y") }}
+                                &middot; {{ lab.points }} pts earned
+                            </p>
+                        </div>
+                        {% elif progress %}
+                        <p class="text-body-secondary small">
+                            Started {{ progress.started_at.strftime("%B %d, %Y") }}.
+                            Finished the challenge?
+                        </p>
+                        <form method="post" action="/labs/{{ lab.slug }}/complete">
+                            {{ forms.csrf_field(csrf_token) }}
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check-circle me-2"></i>Mark completed
+                            </button>
+                        </form>
+                        {% else %}
+                        <p class="text-body-secondary small">
+                            Ready to begin? Your progress will be tracked.
+                        </p>
+                        <form method="post" action="/labs/{{ lab.slug }}/start">
+                            {{ forms.csrf_field(csrf_token) }}
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-play-circle me-2"></i>Start Lab
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

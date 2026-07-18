@@ -21,6 +21,11 @@
                         <i class="bi bi-grid me-1"></i>Features
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.url.path.startswith('/labs') %} active{% endif %}" href="/labs">
+                        <i class="bi bi-flask me-1"></i>Labs
+                    </a>
+                </li>
                 {% if is_authenticated(request) %}
                 <li class="nav-item">
                     <a class="nav-link{% if request.url.path == '/dashboard' %} active{% endif %}" href="/dashboard">
