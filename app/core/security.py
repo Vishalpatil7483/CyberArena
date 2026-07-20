@@ -36,6 +36,19 @@ def dummy_verify() -> None:
     pwd_context.verify("incorrect-password", _DUMMY_HASH)
 
 
+def hash_flag(flag: str) -> str:
+    """Hash a challenge flag for storage. Flags are never stored plaintext.
+
+    Trims surrounding whitespace; comparison is case-sensitive.
+    """
+    return pwd_context.hash(flag.strip())
+
+
+def verify_flag(submitted: str, flag_hash: str) -> bool:
+    """Check a submitted flag against a stored hash (whitespace-trimmed)."""
+    return pwd_context.verify(submitted.strip(), flag_hash)
+
+
 def get_csrf_token(request: Request) -> str:
     """Return the session's CSRF token, creating one if missing."""
     token = request.session.get(CSRF_SESSION_KEY)

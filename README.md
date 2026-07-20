@@ -5,11 +5,11 @@ security teams and students practice the full defensive lifecycle — attack
 simulation, threat detection, incident response, threat hunting, and
 reporting — in a safe, fully simulated environment.
 
-> **Status:** Milestone 3 — labs & challenges foundation. Users can browse
-> a catalog of cybersecurity labs, start them, track completion, and see
-> progress statistics on the dashboard. Remaining domain modules
-> (simulator, detection, incidents, hunting, reports) are scaffolded but
-> not yet implemented.
+> **Status:** Milestone 4 — interactive lab engine. Labs now contain
+> flag/quiz/text challenges with secure flag submission, points, and
+> automatic lab completion. Remaining domain modules (simulator,
+> detection, incidents, hunting, reports) are scaffolded but not yet
+> implemented.
 
 ## Tech Stack
 
@@ -158,23 +158,45 @@ counts, and a completion percentage.
 
 ### Seeding sample labs
 
-After running migrations, load the 14 bundled sample labs:
+After running migrations, load the 14 bundled sample labs and their
+challenges:
 
 ```bash
 python -m app.services.seed
 ```
 
-The seeder matches labs by slug, so it is safe to run repeatedly — existing
-labs are never duplicated or overwritten.
+The seeder matches labs by slug and challenges by (lab, title), so it is
+safe to run repeatedly — nothing is duplicated or overwritten. Challenge
+flags are hashed before insert; the database never stores plaintext flags.
+
+### Challenge engine
+
+Labs contain ordered challenges of three types — `flag`, `quiz`, and
+`text`. Each challenge shows its description, point value, position in the
+lab, a collapsed hint, and the user's attempt count. Signed-in users submit
+answers through a CSRF-protected form and get immediate flash feedback
+(Correct / Incorrect). Submitted flags are whitespace-trimmed and compared
+case-sensitively against a bcrypt hash — plaintext flags are never stored
+or compared. Points are awarded exactly once per challenge; repeat
+submissions after completion never change attempts or points. When a
+user's last remaining challenge in a lab is solved, the lab is
+automatically marked completed (idempotently), and the dashboard shows
+points earned plus solved/total challenge counts alongside the lab
+statistics. Submitting to a challenge implicitly starts its lab.
+
+Labs without challenges keep the manual "Mark completed" button from
+Milestone 3; labs with challenges complete only through solving them.
 
 ### Lab routes
 
-| Route                    | Method | Access        | Purpose                       |
-| ------------------------ | ------ | ------------- | ----------------------------- |
-| `/labs`                  | GET    | anonymous     | Browse the lab catalog        |
-| `/labs/{slug}`           | GET    | anonymous     | Lab details + progress state  |
-| `/labs/{slug}/start`     | POST   | authenticated | Start a lab                   |
-| `/labs/{slug}/complete`  | POST   | authenticated | Mark a lab completed          |
+| Route                                   | Method | Access        | Purpose                       |
+| --------------------------------------- | ------ | ------------- | ----------------------------- |
+| `/labs`                                 | GET    | anonymous     | Browse the lab catalog        |
+| `/labs/{slug}`                          | GET    | anonymous     | Lab details, challenge list   |
+| `/labs/{slug}/start`                    | POST   | authenticated | Start a lab                   |
+| `/labs/{slug}/complete`                 | POST   | authenticated | Complete a challenge-less lab |
+| `/labs/{slug}/challenge/{id}`           | GET    | anonymous     | Challenge details             |
+| `/labs/{slug}/challenge/{id}/submit`    | POST   | authenticated | Submit a flag                 |
 
 ## Testing
 

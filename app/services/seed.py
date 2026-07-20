@@ -1,6 +1,9 @@
-"""Seed sample labs.
+"""Seed sample labs and challenges.
 
-Idempotent: labs are matched by slug, so re-running never duplicates.
+Idempotent: labs and challenges are matched by slug / (lab, title), so
+re-running never duplicates. Challenge flags are stored hashed; the
+plaintext values below are intentional sample content for local training
+use.
 
 Usage:
     python -m app.services.seed
@@ -10,7 +13,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
+from app.core.security import hash_flag
+from app.models.challenge import Challenge
 from app.models.lab import Lab, LabDifficulty
+from app.services.seed_challenges import SAMPLE_CHALLENGES
 
 SAMPLE_LABS: list[dict] = [
     {
@@ -213,10 +219,49 @@ def seed_labs(db: Session) -> int:
     return added
 
 
+def seed_challenges(db: Session) -> int:
+    """Insert sample challenges, hashing flags. Returns count added.
+
+    Idempotent: challenges are matched by (lab, title).
+    """
+    added = 0
+    for slug, challenges in SAMPLE_CHALLENGES.items():
+        lab = db.scalar(select(Lab).where(Lab.slug == slug))
+        if lab is None:  # pragma: no cover - seed data references seeded labs
+            continue
+        existing_titles = set(
+            db.scalars(select(Challenge.title).where(Challenge.lab_id == lab.id))
+        )
+        for data in challenges:
+            if data["title"] in existing_titles:
+                continue
+            fields = {k: v for k, v in data.items() if k != "flag"}
+            db.add(
+                Challenge(
+                    lab_id=lab.id,
+                    flag_hash=hash_flag(data["flag"]),
+                    **fields,
+                )
+            )
+            added += 1
+    if added:
+        db.commit()
+    return added
+
+
 def main() -> None:
     with SessionLocal() as db:
-        added = seed_labs(db)
-    print(f"Seeded {added} lab(s); {len(SAMPLE_LABS) - added} already present.")
+        labs_added = seed_labs(db)
+        challenges_added = seed_challenges(db)
+    total_challenges = sum(len(v) for v in SAMPLE_CHALLENGES.values())
+    print(
+        f"Seeded {labs_added} lab(s); "
+        f"{len(SAMPLE_LABS) - labs_added} already present."
+    )
+    print(
+        f"Seeded {challenges_added} challenge(s); "
+        f"{total_challenges - challenges_added} already present."
+    )
 
 
 if __name__ == "__main__":

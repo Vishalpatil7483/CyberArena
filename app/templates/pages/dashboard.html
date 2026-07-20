@@ -37,6 +37,25 @@
             {% endfor %}
         </div>
 
+        <div class="row g-4 mb-4">
+            {% set challenge_cards = [
+                ("bi-star-fill", "Points earned", challenge_stats.points_earned),
+                ("bi-flag-fill", "Challenges solved", challenge_stats.completed),
+                ("bi-flag", "Total challenges", challenge_stats.total_challenges),
+            ] %}
+            {% for icon, label, value in challenge_cards %}
+            <div class="col-6 col-lg-4">
+                <div class="card border-secondary-subtle h-100">
+                    <div class="card-body p-4 text-center">
+                        <i class="bi {{ icon }} text-warning fs-3"></i>
+                        <div class="fs-3 fw-bold mt-1">{{ value }}</div>
+                        <div class="text-body-secondary small">{{ label }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
         <div class="row g-4">
             <div class="col-lg-5">
                 <div class="card border-secondary-subtle h-100">

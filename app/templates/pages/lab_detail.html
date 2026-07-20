@@ -30,6 +30,38 @@
                         <p class="text-body-secondary mb-0">{{ lab.description }}</p>
                     </div>
                 </div>
+
+                {% if challenges %}
+                <div class="card border-secondary-subtle mt-4">
+                    <div class="card-body p-4">
+                        <h2 class="h5 fw-semibold mb-3">
+                            <i class="bi bi-flag text-primary me-2"></i>Challenges
+                        </h2>
+                        <div class="list-group list-group-flush">
+                            {% for challenge in challenges %}
+                            {% set ch_progress = challenge_progress.get(challenge.id) %}
+                            <a href="/labs/{{ lab.slug }}/challenge/{{ challenge.id }}"
+                               class="list-group-item list-group-item-action bg-transparent d-flex justify-content-between align-items-center px-0 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if ch_progress and ch_progress.is_completed %}
+                                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                    {% else %}
+                                    <i class="bi bi-circle text-body-secondary fs-5"></i>
+                                    {% endif %}
+                                    <div>
+                                        <div class="fw-semibold">{{ loop.index }}. {{ challenge.title }}</div>
+                                        <small class="text-body-secondary text-capitalize">{{ challenge.challenge_type.value }}</small>
+                                    </div>
+                                </div>
+                                <span class="badge text-bg-primary bg-opacity-75">
+                                    <i class="bi bi-star me-1"></i>{{ challenge.points }} pts
+                                </span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             <div class="col-lg-4">
                 <div class="card border-secondary-subtle">
@@ -54,6 +86,22 @@
                             </p>
                         </div>
                         {% elif progress %}
+                        {% if challenges %}
+                        {% set done = challenge_progress.values() | selectattr("is_completed") | list | length %}
+                        <p class="text-body-secondary small mb-2">
+                            Started {{ progress.started_at.strftime("%B %d, %Y") }}.
+                        </p>
+                        <div class="progress mb-2" role="progressbar"
+                             aria-valuenow="{{ done }}" aria-valuemin="0"
+                             aria-valuemax="{{ challenges | length }}">
+                            <div class="progress-bar bg-success"
+                                 style="width: {{ (done * 100 / (challenges | length)) | round }}%"></div>
+                        </div>
+                        <p class="text-body-secondary small mb-0">
+                            {{ done }} of {{ challenges | length }} challenges solved.
+                            The lab completes automatically when all are solved.
+                        </p>
+                        {% else %}
                         <p class="text-body-secondary small">
                             Started {{ progress.started_at.strftime("%B %d, %Y") }}.
                             Finished the challenge?
@@ -64,6 +112,7 @@
                                 <i class="bi bi-check-circle me-2"></i>Mark completed
                             </button>
                         </form>
+                        {% endif %}
                         {% else %}
                         <p class="text-body-secondary small">
                             Ready to begin? Your progress will be tracked.

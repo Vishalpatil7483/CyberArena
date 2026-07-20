@@ -9,6 +9,7 @@ from app.core.database import get_db
 from app.core.security import get_csrf_token
 from app.core.templates import templates
 from app.models.user import User
+from app.services import challenges as challenge_service
 from app.services import labs as lab_service
 
 router = APIRouter(tags=["dashboard"])
@@ -26,6 +27,7 @@ async def dashboard(
         {
             "user": user,
             "stats": lab_service.get_lab_stats(db, user.id),
+            "challenge_stats": challenge_service.get_challenge_stats(db, user.id),
             "csrf_token": get_csrf_token(request),
         },
     )

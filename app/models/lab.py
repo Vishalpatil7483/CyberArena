@@ -3,11 +3,15 @@
 import enum
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum, ForeignKey, Integer, String, Text, UniqueConstraint, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base, TimestampMixin
+
+if TYPE_CHECKING:
+    from app.models.challenge import Challenge
 
 
 class LabDifficulty(str, enum.Enum):
@@ -40,6 +44,9 @@ class Lab(TimestampMixin, Base):
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
     progress_records: Mapped[list["UserLabProgress"]] = relationship(
+        back_populates="lab", cascade="all, delete-orphan"
+    )
+    challenges: Mapped[list["Challenge"]] = relationship(
         back_populates="lab", cascade="all, delete-orphan"
     )
 

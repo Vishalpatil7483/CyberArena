@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% import "partials/forms.html" as forms %}
+
+{% block title %}{{ challenge.title }} — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container py-4">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/labs">Labs</a></li>
+                <li class="breadcrumb-item"><a href="/labs/{{ lab.slug }}">{{ lab.title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ challenge.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary-subtle">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            <span class="badge text-bg-secondary">
+                                Challenge {{ challenge_number }} of {{ challenge_count }}
+                            </span>
+                            <span class="badge text-bg-primary bg-opacity-75">
+                                <i class="bi bi-star me-1"></i>{{ challenge.points }} pts
+                            </span>
+                            {% if progress and progress.is_completed %}
+                            <span class="badge text-bg-success">
+                                <i class="bi bi-check-circle me-1"></i>Completed
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h1 class="h2 fw-bold">{{ challenge.title }}</h1>
+                        <hr class="border-secondary-subtle my-4">
+                        <p class="text-body-secondary" style="white-space: pre-line;">{{ challenge.description }}</p>
+
+                        {% if challenge.hint %}
+                        <div class="mt-4">
+                            <button class="btn btn-outline-light btn-sm" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#hintCollapse"
+                                    aria-expanded="false" aria-controls="hintCollapse">
+                                <i class="bi bi-lightbulb me-1"></i>Show hint
+                            </button>
+                            <div class="collapse mt-3" id="hintCollapse">
+                                <div class="alert alert-info mb-0">
+                                    <i class="bi bi-lightbulb me-2"></i>{{ challenge.hint }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary-subtle">
+                    <div class="card-body p-4">
+                        <h2 class="h6 fw-semibold text-body-secondary text-uppercase mb-3">
+                            Submit flag
+                        </h2>
+                        {% if not is_authenticated(request) %}
+                        <p class="text-body-secondary small">
+                            Sign in to submit answers and earn points.
+                        </p>
+                        <a href="/login?next=/labs/{{ lab.slug }}/challenge/{{ challenge.id }}"
+                           class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign in
+                        </a>
+                        {% elif progress and progress.is_completed %}
+                        <div class="text-center py-2">
+                            <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                            <p class="fw-semibold mt-2 mb-1">Completed</p>
+                            <p class="text-body-secondary small mb-0">
+                                {{ challenge.points }} pts earned
+                                &middot; {{ progress.attempts }} attempt{{ "s" if progress.attempts != 1 }}
+                            </p>
+                        </div>
+                        {% else %}
+                        <form method="post"
+                              action="/labs/{{ lab.slug }}/challenge/{{ challenge.id }}/submit">
+                            {{ forms.csrf_field(csrf_token) }}
+                            <div class="mb-3">
+                                <label for="flag" class="form-label visually-hidden">Flag</label>
+                                <input type="text" class="form-control font-monospace" id="flag"
+                                       name="flag" placeholder="CTF{...}" required autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-flag me-2"></i>Submit Flag
+                            </button>
+                        </form>
+                        {% if progress and progress.attempts > 0 %}
+                        <p class="text-body-secondary small text-center mt-3 mb-0">
+                            {{ progress.attempts }} attempt{{ "s" if progress.attempts != 1 }} so far
+                        </p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

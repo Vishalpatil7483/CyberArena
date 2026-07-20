@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
 from app.core.config import get_settings
+from app.core.flash import get_flashed_messages
 from app.core.security import SESSION_USER_KEY, get_csrf_token
 
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
@@ -23,3 +24,4 @@ templates.env.globals["app_name"] = _settings.app_name
 templates.env.globals["app_version"] = _settings.app_version
 templates.env.globals["is_authenticated"] = _is_authenticated
 templates.env.globals["csrf_token_for"] = get_csrf_token
+templates.env.globals["get_flashed_messages"] = get_flashed_messages
