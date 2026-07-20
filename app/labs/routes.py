@@ -16,6 +16,7 @@ from app.core.templates import templates
 from app.models.challenge import Challenge
 from app.models.lab import Lab
 from app.models.user import User
+from app.services import achievements as achievement_service
 from app.services import challenges as challenge_service
 from app.services import labs as lab_service
 
@@ -120,6 +121,8 @@ async def lab_complete(
     redirect = _csrf_or_redirect(request, csrf_token, lab.slug)
     if redirect is None:
         lab_service.complete_lab(db, user.id, lab)
+        for achievement in achievement_service.evaluate_achievements(db, user.id):
+            flash(request, f"Achievement unlocked: {achievement.name}!", "success")
         redirect = RedirectResponse(
             f"/labs/{lab.slug}", status_code=status.HTTP_303_SEE_OTHER
         )
@@ -203,4 +206,6 @@ async def challenge_submit(
         )
     else:
         flash(request, f"Correct! +{result.points_awarded} points.", "success")
+    for name in result.new_achievements:
+        flash(request, f"Achievement unlocked: {name}!", "success")
     return back

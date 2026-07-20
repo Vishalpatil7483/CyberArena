@@ -26,10 +26,20 @@
                         <i class="bi bi-flask me-1"></i>Labs
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.url.path == '/leaderboard' %} active{% endif %}" href="/leaderboard">
+                        <i class="bi bi-bar-chart-line me-1"></i>Leaderboard
+                    </a>
+                </li>
                 {% if is_authenticated(request) %}
                 <li class="nav-item">
                     <a class="nav-link{% if request.url.path == '/dashboard' %} active{% endif %}" href="/dashboard">
                         <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.url.path == '/profile' %} active{% endif %}" href="/profile">
+                        <i class="bi bi-person-circle me-1"></i>Profile
                     </a>
                 </li>
                 <li class="nav-item ms-lg-2">

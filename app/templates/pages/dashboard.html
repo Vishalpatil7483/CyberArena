@@ -101,6 +101,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-lg-5">
+                <div class="card border-secondary-subtle h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5 fw-semibold mb-3">
+                            <i class="bi bi-award text-warning me-2"></i>Standing
+                        </h2>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-5 text-body-secondary fw-normal">Current rank</dt>
+                            <dd class="col-sm-7 fw-semibold">#{{ rank }}</dd>
+                            <dt class="col-sm-5 text-body-secondary fw-normal">Latest achievement</dt>
+                            <dd class="col-sm-7">
+                                {% if latest_achievement %}
+                                <i class="bi {{ latest_achievement.achievement.icon }} text-warning me-1"></i>
+                                {{ latest_achievement.achievement.name }}
+                                {% else %}
+                                <span class="text-body-secondary">None yet</span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                        {% if next_achievement %}
+                        <hr class="border-secondary-subtle">
+                        <p class="text-body-secondary small mb-2">
+                            Next up: <strong>{{ next_achievement.name }}</strong>
+                            ({{ challenge_stats.points_earned }} / {{ next_achievement.points_required }} pts)
+                        </p>
+                        <div class="progress" role="progressbar"
+                             aria-valuenow="{{ challenge_stats.points_earned }}"
+                             aria-valuemin="0" aria-valuemax="{{ next_achievement.points_required }}">
+                            <div class="progress-bar bg-warning"
+                                 style="width: {{ (challenge_stats.points_earned * 100 / next_achievement.points_required) | round }}%"></div>
+                        </div>
+                        {% endif %}
+                        <div class="mt-3">
+                            <a href="/profile" class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-person-circle me-1"></i>View profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card border-secondary-subtle h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5 fw-semibold mb-3">
+                            <i class="bi bi-bar-chart-line text-primary me-2"></i>Top 5 defenders
+                        </h2>
+                        {% import "partials/profiles.html" as profile_ui %}
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-2">
+                                <tbody>
+                                    {% for entry in top_users %}
+                                    {{ profile_ui.leaderboard_row(entry, user.username) }}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="/leaderboard" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-bar-chart-line me-1"></i>Full leaderboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}

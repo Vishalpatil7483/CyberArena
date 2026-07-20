@@ -14,8 +14,10 @@ from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.core.security import hash_flag
+from app.models.achievement import Achievement
 from app.models.challenge import Challenge
 from app.models.lab import Lab, LabDifficulty
+from app.services.achievements import ACHIEVEMENT_RULES
 from app.services.seed_challenges import SAMPLE_CHALLENGES
 
 SAMPLE_LABS: list[dict] = [
@@ -249,10 +251,38 @@ def seed_challenges(db: Session) -> int:
     return added
 
 
+def seed_achievements(db: Session) -> int:
+    """Insert any missing achievements from the engine's rule definitions.
+
+    Idempotent: matched by slug. Definitions live in
+    app.services.achievements so seed data and rules cannot drift apart.
+    """
+    existing_slugs = set(db.scalars(select(Achievement.slug)))
+    added = 0
+    for rule in ACHIEVEMENT_RULES:
+        if rule.slug in existing_slugs:
+            continue
+        db.add(
+            Achievement(
+                slug=rule.slug,
+                name=rule.name,
+                description=rule.description,
+                icon=rule.icon,
+                category=rule.category,
+                points_required=rule.points_required,
+            )
+        )
+        added += 1
+    if added:
+        db.commit()
+    return added
+
+
 def main() -> None:
     with SessionLocal() as db:
         labs_added = seed_labs(db)
         challenges_added = seed_challenges(db)
+        achievements_added = seed_achievements(db)
     total_challenges = sum(len(v) for v in SAMPLE_CHALLENGES.values())
     print(
         f"Seeded {labs_added} lab(s); "
@@ -261,6 +291,10 @@ def main() -> None:
     print(
         f"Seeded {challenges_added} challenge(s); "
         f"{total_challenges - challenges_added} already present."
+    )
+    print(
+        f"Seeded {achievements_added} achievement(s); "
+        f"{len(ACHIEVEMENT_RULES) - achievements_added} already present."
     )
 
 

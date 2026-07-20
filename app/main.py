@@ -15,6 +15,7 @@ from app.core.middleware import SecurityHeadersMiddleware
 from app.core.routes import router as pages_router
 from app.dashboard.routes import router as dashboard_router
 from app.labs.routes import router as labs_router
+from app.profiles.routes import router as profiles_router
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_router)
     app.include_router(dashboard_router)
     app.include_router(labs_router)
+    app.include_router(profiles_router)
 
     return app
 

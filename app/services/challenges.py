@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.core.security import verify_flag
 from app.models.challenge import Challenge, UserChallengeProgress
 from app.models.lab import Lab
+from app.services import achievements as achievement_service
 from app.services import labs as lab_service
 
 
@@ -26,6 +27,7 @@ class SubmissionResult:
     already_completed: bool
     points_awarded: int
     lab_completed: bool
+    new_achievements: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -182,11 +184,14 @@ def submit_flag(
     if lab_completed:
         lab_service.complete_lab(db, user_id, lab)
 
+    new_achievements = achievement_service.evaluate_achievements(db, user_id)
+
     return SubmissionResult(
         correct=True,
         already_completed=False,
         points_awarded=challenge.points,
         lab_completed=lab_completed,
+        new_achievements=tuple(a.name for a in new_achievements),
     )
 
 
